@@ -1,0 +1,238 @@
+﻿-- GET TÀI KHOẢN
+ALTER PROC getTaiKhoan
+@USER nchar(30),
+@PASS nchar(30)
+AS
+BEGIN
+	SELECT username, password FROM TAIKHOAN WHERE username = @USER AND password = @PASS
+END
+GO
+
+--GET LEVER TAI KHOAN
+ALTER PROC getLvTaiKhoan
+AS
+BEGIN
+	SELECT lv FROM TAIKHOAN
+END
+GO
+
+CREATE PROC getTK
+AS
+BEGIN
+SELECT * FROM TAIKHOAN
+END
+GO
+
+ALTER PROC getAccount
+AS
+BEGIN
+SELECT * FROM TAIKHOAN
+END
+GO
+
+CREATE PROC getAllBan
+AS
+BEGIN
+SELECT * FROM BAN
+END
+GO
+
+CREATE PROC getMaBan
+@MABAN int
+AS
+BEGIN
+SELECT * FROM BAN WHERE MaBan = @MABAN
+END
+GO
+
+CREATE PROC getThucDon
+AS
+BEGIN
+SELECT * FROM THUCDON
+END
+GO
+
+--GOI LOAI RA
+ALTER PROC getNhomMon
+AS
+BEGIN
+SELECT * FROM NHOMMON
+END
+GO
+
+--INSERT THUC DON
+CREATE PROC insertThucDon
+@TENMON nvarchar(50),
+@MALOAI int,
+@DONGIA int,
+@DVT nvarchar(50)
+AS
+BEGIN
+INSERT INTO THUCDON(TenMon,MaLoai,DonGia,DVT)
+VALUES(@TENMON,@MALOAI,@DONGIA,@DVT)
+END
+GO
+-- THEM NHOM MON
+CREATE PROC insertNhomMon
+@MALOAI int,
+@TENLOAI nvarchar(50),
+@MAUSAC nvarchar(50)
+AS
+BEGIN
+INSERT INTO NHOMMON(MaLoai,TenLoai,MauSac)
+VALUES(@MALOAI,@TENLOAI,@MAUSAC)
+END
+GO
+-- THEM TAI KHOAN
+ALTER PROC insertTaiKhoan
+@USERNAME nchar(30),
+@PASSWORD nchar(30),
+@LV int,
+@FULLNAME nvarchar(50)
+AS
+BEGIN
+INSERT INTO TAIKHOAN(username,password,lv,fullname)
+VALUES(@USERNAME,@PASSWORD,@LV,@FULLNAME)
+END
+GO
+--update TaiKhoan
+ ALTER PROC updateTaiKhoan
+@USERNAME nchar(30),
+@PASSWORD nchar(30),
+@LV int,
+@FULLNAME nvarchar(50),
+@ID int
+ AS
+ BEGIN
+UPDATE TAIKHOAN SET username = @USERNAME,password = @PASSWORD, lv = @LV,fullname = @FULLNAME WHERE id = @ID
+ END
+ GO
+ --delete taikhoan
+ CREATE PROC deleteTaiKhoan
+ @ID int
+AS
+BEGIN
+DELETE FROM TAIKHOAN
+WHERE id = @ID
+END
+GO
+
+--insert ban
+CREATE PROC insertBan
+@MABAN int,
+@TENBAN varchar(50),
+@TRANGTHAI nvarchar(50)
+AS
+BEGIN
+INSERT INTO BAN(MaBan,TenBan,TrangThai)
+VALUES(@MABAN,@TENBAN,@TRANGTHAI)
+END
+GO
+
+-- Sửa bàn
+CREATE PROC updateBan
+@TENBAN varchar(50),
+@TRANGTHAI nvarchar(50),
+@MABAN int
+AS
+BEGIN
+UPDATE BAN SET TenBan = @TENBAN, TrangThai = @TRANGTHAI WHERE MaBan = @MABAN
+END
+GO
+
+-- XOA BAN
+CREATE PROC deleteBan
+@MABAN int
+AS
+BEGIN
+DELETE FROM BAN WHERE MaBan = @MABAN
+END
+GO
+
+--CẬP NHẬT NHÓM MÓN
+CREATE PROC updateNhomMon
+@TENLOAI nvarchar(50),
+@MAUSAC nvarchar(50),
+@MALOAI int
+AS
+BEGIN
+UPDATE NHOMMON SET TenLoai = @TENLOAI, MauSac = @MAUSAC WHERE MaLoai = @MALOAI
+END
+GO
+
+-- XOA NHOM MON
+CREATE PROC deleteNhomMon
+@MALOAI int
+AS
+BEGIN
+DELETE FROM NHOMMON WHERE MaLoai = @MALOAI
+END
+GO
+
+--CAP NHAT THUC DON
+
+CREATE PROC updateThucDon
+@TENMON nvarchar(50),
+@MALOAI int, 
+@DONGIA int,
+@DVT nvarchar(50),
+@MAMON int
+AS
+BEGIN
+UPDATE THUCDON SET TenMon = @TENMON, MaLoai = @MALOAI, DonGia = @DONGIA, DVT = @DVT
+END
+GO
+
+--XOA THUC DON
+CREATE PROC deleteThucDon
+@MAMON int
+AS
+BEGIN
+DELETE FROM THUCDON WHERE MaMon = @MAMON
+END
+GO
+
+--DANH SÁCH HÓA ĐƠN
+CREATE PROC getDsOrder
+@MAHOADON int
+AS
+BEGIN
+Select ct.MaMon, TenMon, DVT, SoLuong, Gia, MaHoaDon From CHITIETHOADON AS ct INNER JOIN THUCDON AS td ON ct.MaMon = td.MaMon Where ct.MaHoaDon = @MAHOADON
+END
+GO
+
+-- get hoa don by ma hoa don
+CREATE PROC getHDByMaBan
+@MABAN int
+AS
+BEGIN
+Select * From HOADON Where MaBan = @MABAN AND TrangThai = 0
+END
+GO
+
+-- check danh sach mon
+CREATE PROC CheckDsMon
+@MABAN int,
+@MAHOADON int
+AS
+BEGIN
+Select * From HOADON AS hd INNER JOIN CHITIETHOADON AS ct ON ct.MaHoaDon = hd.MaHoaDon Where MaBan = @MABAN AND ct.MaHoaDon = @MAHOADON AND TrangThai = 0
+END
+GO
+
+--HUY HOA DON
+CREATE PROC HuyHD
+@MAHOADON int
+AS
+BEGIN
+Delete From HOADON WHERE MaHoaDon = @MAHOADON
+END
+GO
+
+--LOAD MÃ BÀN
+CREATE PROC LoadMaBan
+AS
+BEGIN
+SELECT MaBan FROM BAN
+END
+GO
