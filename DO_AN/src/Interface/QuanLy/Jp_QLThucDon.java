@@ -203,10 +203,53 @@ public class Jp_QLThucDon extends javax.swing.JPanel {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Interface/Images/logo.png"))); // NOI18N
 
         txtTenMon.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtTenMon.setToolTipText("Tên Món");
+        txtTenMon.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTenMonFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTenMonFocusLost(evt);
+            }
+        });
 
         txtDonGia.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtDonGia.setToolTipText("Đơn Giá");
+        txtDonGia.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtDonGiaFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDonGiaFocusLost(evt);
+            }
+        });
 
         txtDVT.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtDVT.setToolTipText("DVT");
+        txtDVT.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtDVTFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDVTFocusLost(evt);
+            }
+        });
+        txtDVT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDVTActionPerformed(evt);
+            }
+        });
+
+        txtMaMon.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMaMon.setToolTipText("Mã Món");
+        txtMaMon.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtMaMonFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaMonFocusLost(evt);
+            }
+        });
 
         cbbNhomMonThem.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
@@ -316,30 +359,31 @@ private boolean validate(JTextField tf, String value, String title) {
         }
         return true;
     }
-public  void setTestfield(){
-    txtMaMon.setText("");
-    txtTenMon.setText("");
-    txtDonGia.setText("");
-    txtDVT.setText("");
-}
+
+    public void setTestfield() {
+        txtMaMon.setText("");
+        txtTenMon.setText("");
+        txtDonGia.setText("");
+        txtDVT.setText("");
+    }
     private void btnThemTDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemTDActionPerformed
-        if(txtTenMon.getText().equals("")||txtDonGia.getText().equals("")||txtDVT.getText().equals("")){
+        if (txtTenMon.getText().equals("") || txtDonGia.getText().equals("") || txtDVT.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Không được rỗng");
-        }else{
+        } else {
             try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
-                PreparedStatement ps = conn.prepareCall("{call insertThucDon(?,?,?,?}")) {
-            ps.setString(1, txtTenMon.getText());
-            String MaNhom = ((Loai) cbbNhomMonThem.getSelectedItem()).getMaLoai();
-            ps.setString(2, MaNhom);
-            ps.setInt(3, Integer.parseInt(txtDonGia.getText()));
-            ps.setString(4, txtDVT.getText());
-            ps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Thêm Thành Công");
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        getData();
+                    PreparedStatement ps = conn.prepareCall("{call insertThucDon(?,?,?,?}")) {
+                ps.setString(1, txtTenMon.getText());
+                String MaNhom = ((Loai) cbbNhomMonThem.getSelectedItem()).getMaLoai();
+                ps.setString(2, MaNhom);
+                ps.setInt(3, Integer.parseInt(txtDonGia.getText()));
+                ps.setString(4, txtDVT.getText());
+                ps.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Thêm Thành Công");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            getData();
         }
     }//GEN-LAST:event_btnThemTDActionPerformed
 
@@ -369,22 +413,26 @@ public  void setTestfield(){
     }//GEN-LAST:event_btnSuaTDActionPerformed
 
     private void btnXoaTDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaTDActionPerformed
-        if (txtTenMon.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn người muốn xóa");
-        } else {
-            try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
-                    PreparedStatement ps = conn.prepareCall("{call deleteThucDon(?)}")) {
-                ps.setInt(1, Integer.parseInt(txtMaMon.getText()));
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Xóa Tài Khoản Thành Công");
+        int kq = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa thực đơn này không?", "Chú ý", JOptionPane.YES_NO_OPTION);
+        if (kq == 0) {
+            if (txtTenMon.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn người muốn xóa");
+            } else {
+                try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                        PreparedStatement ps = conn.prepareCall("{call deleteThucDon(?)}")) {
+                    ps.setInt(1, Integer.parseInt(txtMaMon.getText()));
+                    ps.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Xóa Tài Khoản Thành Công");
 
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
+            getData();
+            setTestfield();
         }
-        getData();
-        setTestfield();
+        
     }//GEN-LAST:event_btnXoaTDActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -429,6 +477,70 @@ public  void setTestfield(){
         sorter.setSortKeys(null);
         jTable1.setRowSorter((RowSorter<? extends TableModel>) sorter);
     }//GEN-LAST:event_txtTimThucDonKeyReleased
+
+    private void txtMaMonFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaMonFocusGained
+        if (txtMaMon.getText().equals("Mã Món")) {
+            txtMaMon.setText("");
+        }
+        txtMaMon.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtMaMonFocusGained
+
+    private void txtMaMonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaMonFocusLost
+        if (txtMaMon.getText().equals("")) {
+            txtMaMon.setText("Mã Món");
+        }
+        //[204,204,204]
+        txtMaMon.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtMaMonFocusLost
+
+    private void txtTenMonFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTenMonFocusGained
+        if (txtTenMon.getText().equals("Tên Món")) {
+            txtTenMon.setText("");
+        }
+        txtTenMon.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtTenMonFocusGained
+
+    private void txtTenMonFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTenMonFocusLost
+        if (txtTenMon.getText().equals("")) {
+            txtTenMon.setText("Tên Món");
+        }
+        //[204,204,204]
+        txtTenMon.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtTenMonFocusLost
+
+    private void txtDonGiaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDonGiaFocusGained
+        if (txtDonGia.getText().equals("Đơn Giá")) {
+            txtDonGia.setText("");
+        }
+        txtDonGia.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtDonGiaFocusGained
+
+    private void txtDonGiaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDonGiaFocusLost
+        if (txtDonGia.getText().equals("")) {
+            txtDonGia.setText("Đơn Giá");
+        }
+        //[204,204,204]
+        txtDonGia.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtDonGiaFocusLost
+
+    private void txtDVTFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDVTFocusGained
+        if (txtDVT.getText().equals("DVT")) {
+            txtDVT.setText("");
+        }
+        txtDVT.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtDVTFocusGained
+
+    private void txtDVTFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDVTFocusLost
+        if (txtDVT.getText().equals("")) {
+            txtDVT.setText("DVT");
+        }
+        //[204,204,204]
+        txtDVT.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtDVTFocusLost
+
+    private void txtDVTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDVTActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDVTActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JLTongSoMon;

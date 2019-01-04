@@ -6,7 +6,8 @@
 package Interface;
 
 import Connect.ConnectSQL;
-import Models.TaiKhoan;
+import Interface.Setting.JpSetting;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,15 +19,18 @@ import javax.swing.JOptionPane;
  * @author Dinh
  */
 public class frmLogin extends javax.swing.JFrame {
-    ConnectSQL cn = new ConnectSQL();   
+
+    ConnectSQL cn = new ConnectSQL();
     String name;
     String pass;
     String lv;
+    String fullname;
 
     public frmLogin() {
         initComponents();
         setLocationRelativeTo(null);
         setResizable(false);
+//        getFullTaiKhoan(name, pass, lv, lv);
     }
 
     public void thoat() {
@@ -71,8 +75,18 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel5.setText("PASSWORD");
 
         txtUserName.setFont(new java.awt.Font("Viner Hand ITC", 1, 14)); // NOI18N
+        txtUserName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtUserNameKeyPressed(evt);
+            }
+        });
 
         txtPassWord.setFont(new java.awt.Font("Viner Hand ITC", 1, 14)); // NOI18N
+        txtPassWord.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPassWordKeyPressed(evt);
+            }
+        });
 
         btnLogin.setFont(new java.awt.Font("Viner Hand ITC", 1, 15)); // NOI18N
         btnLogin.setText("LOGIN");
@@ -166,38 +180,68 @@ public class frmLogin extends javax.swing.JFrame {
                 name = rs.getString("username");
                 pass = rs.getString("password");
                 lv = rs.getString("lv");
-//                TaiKhoan tk = new TaiKhoan();
-//                Run.tk = cn.GetTaiKhoan(name, pass);
+                fullname = rs.getString("fullname");
                 this.setVisible(false);
-                frmMain main = new frmMain(name,pass,lv);
+                frmMain main = new frmMain();
                 main.setVisible(true);
-            }
-            else{
+            } else {
                 JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không đúng!");
             }
-//            System.out.println(name);
-//            System.out.println(pass);
-//            System.out.println(lv);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-//        TaiKhoan tk = new TaiKhoan();
-//        tk.setUserName(user);
-//        tk.setPassWord(pass);
-//        boolean check = cn.CheckLogin(tk);
-//        int lv = cn.LVTK(tk);
-//        if(check == true){
-//            Run.tk = cn.GetTaiKhoan(user, pass);
-//            this.setVisible(false);
-//            Run.QLCF();
-//        }else{
-//            JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không đúng", "Login Error", JOptionPane.ERROR_MESSAGE);
-//        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
+
+    private void txtPassWordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassWordKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                    PreparedStatement ps = conn.prepareCall("{call getTaiKhoan(?,?)}")) {
+                ps.setString(1, txtUserName.getText());
+                ps.setString(2, txtPassWord.getText());
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    name = rs.getString("username");
+                    pass = rs.getString("password");
+                    lv = rs.getString("lv");
+                    fullname = rs.getString("fullname");
+                    this.setVisible(false);
+                    frmMain main = new frmMain(name, pass, lv, fullname);
+                    main.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không đúng!");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_txtPassWordKeyPressed
+
+    private void txtUserNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserNameKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                    PreparedStatement ps = conn.prepareCall("{call getTaiKhoan(?,?)}")) {
+                ps.setString(1, txtUserName.getText());
+                ps.setString(2, txtPassWord.getText());
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    name = rs.getString("username");
+                    pass = rs.getString("password");
+                    lv = rs.getString("lv");
+                    this.setVisible(false);
+                    frmMain main = new frmMain(name, pass, lv, fullname);
+                    main.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không đúng!");
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_txtUserNameKeyPressed
 
     /**
      * @param args the command line arguments

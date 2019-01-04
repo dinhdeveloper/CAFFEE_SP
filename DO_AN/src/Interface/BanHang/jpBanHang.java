@@ -6,13 +6,13 @@
 package Interface.BanHang;
 
 import Connect.ConnectSQL;
+import Interface.QuanLy.Jp_QLBan;
 import Models.Ban;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,10 +38,23 @@ public class jpBanHang extends javax.swing.JPanel {
      */
     public jpBanHang() {
         initComponents();
+//        jLBan.setSize(10,10); 
         FillBan();
+        Jp_QLBan qlban = new Jp_QLBan();
     }
 
+//    public void getTatCaBan() {
+//        try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+//                PreparedStatement ps = conn.prepareCall("{call getAllBan}")) {
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                
+//            }
+//        } catch (Exception e) {
+//        }
+//    }
     public void FillBan() {
+        Jp_QLBan qlban = new Jp_QLBan();
 
         arrBan = cn.GetBan(0);
         if (arrBan != null) {
@@ -58,6 +71,7 @@ public class jpBanHang extends javax.swing.JPanel {
                     btn[i].setIcon(new javax.swing.ImageIcon(getClass().getResource("/Interface/Images/ico-Table.png")));
                     Border thickBorder = new LineBorder(Color.WHITE, 8);
                     btn[i].setBorder(thickBorder);
+
                     btn[i].setBackground(Color.decode("#8080ff"));
                     btn[i].setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
                     btn[i].setForeground(new java.awt.Color(51, 51, 51));
@@ -68,20 +82,49 @@ public class jpBanHang extends javax.swing.JPanel {
                         btn[i].setBackground(Color.decode("#ff6699"));
                     }
                     btn[i].setPreferredSize(new Dimension(90, 70));
+//bắt sự kiện
 
-//                btn[i].addMouseListener(new MouseAdapter() {
-//                        @Override
-//                        public void mousePressed(MouseEvent e) {
-//                            JpGoiMon goimon;
+                    btn[i].addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            JpGoiMon goimon;
+                            int maBAN = 0;
+                            ArrayList<Ban> arrBan = null;
+                            if (maBAN == 0) {
+                                try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                                        PreparedStatement ps = conn.prepareCall("{call getAllBan}")) {
+                                    ResultSet rs = ps.executeQuery();
+                                    arrBan = new ArrayList<Ban>();
+                                    while (rs.next()) {
+                                        Ban sp = new Ban(rs.getInt(1), rs.getString(2), rs.getString(3));
+                                        arrBan.add(sp);
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            } else {
+                                try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                                        PreparedStatement ps = conn.prepareCall("{call getMaBan(?)}")) {
+                                    
+                                    ResultSet rs = ps.executeQuery();
+                                    arrBan = new ArrayList<Ban>();
+                                    while (rs.next()) {
+                                        Ban sp = new Ban(rs.getInt(1), rs.getString(2), rs.getString(3));
+                                        arrBan.add(sp);
+                                    }
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
 //                            ban = cn.GetBan(Integer.parseInt(e.getComponent().getName()));
-//                            if(ban != null){                            
-//                                goimon = new JpGoiMon(ban.get(0).getTrangThai(),ban.get(0).getTenBan(),ban.get(0).getMaBan());
+                            if (ban != null) {
+                                goimon = new JpGoiMon(ban.get(0).getTrangThai(), ban.get(0).getTenBan(), ban.get(0).getMaBan());
 //                                jPanel2.removeAll();
 //                                jPanel2.add(goimon);
 //                                jPanel2.updateUI();
-//                            }
-//                        }                    
-//                });
+                            }
+                        }
+                    });
                     jLBan.add(btn[i]);
                     jLBan.updateUI();
                 }
@@ -183,24 +226,25 @@ public class jpBanHang extends javax.swing.JPanel {
         );
 
         jLBan.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jLBan.setMinimumSize(new java.awt.Dimension(15, 15));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 75, Short.MAX_VALUE)
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(75, 75, 75)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLBan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLBan, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
                     .addComponent(jpTrangThai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLBan, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLBan, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jpTrangThai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Interface/Images/cafe-menu-abstract-pattern-brown-colors-coffee-beans-background-32625326.jpg"))); // NOI18N
@@ -210,15 +254,13 @@ public class jpBanHang extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 728, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 75, Short.MAX_VALUE))
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 753, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 26, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -227,16 +269,15 @@ public class jpBanHang extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 2, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 

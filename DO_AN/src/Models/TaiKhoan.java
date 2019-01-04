@@ -59,4 +59,10 @@ public class TaiKhoan {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+    public void getFullTaiKhoan(String userName, String passWord,int lv,String fullName){
+        this.lv = lv;
+        this.userName = userName;
+        this.passWord = passWord;
+        this.fullName = fullName;
+    }
 }

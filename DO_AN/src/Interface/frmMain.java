@@ -7,17 +7,24 @@ package Interface;
 
 import Interface.Home.JpHome;
 import Connect.ConnectSQL;
+import Dao.BanDAO;
 import Interface.BanHang.jpBanHang;
 import Interface.Kho.JpKho;
 import Interface.QuanLy.JpQuanLy;
+import static Interface.Run.tk;
 import Interface.Setting.JpSetting;
 import Interface.ThongKe.JpThongKe;
 import Models.Ban;
 import Models.TaiKhoan;
 import static java.lang.Thread.sleep;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,29 +32,30 @@ import javax.swing.JOptionPane;
  * @author Dinh
  */
 public class frmMain extends javax.swing.JFrame {
-    
+
     ConnectSQL cn = new ConnectSQL();
     TaiKhoan tk = new TaiKhoan();
     String user;
     String password;
     String lever;
+    String fullname;
 //    public TaiKhoan loadtaikhoan(String user, String pass) {
 //        return cn.GetTaiKhoan(user, pass);
 //    }
 
-    public frmMain(){
-        
+    public frmMain() {
+
     }
-    public frmMain(String name, String pass, String lv) {
+
+    public frmMain(String name, String pass, String lv, String full) {
         initComponents();
         //setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // khong đóng được JFrame
         setLocationRelativeTo(null);
         Clock clock = new Clock();
         fill();
-        clock.start();       
+        clock.start();
         TaiKhoan tk = new TaiKhoan();
-        
-        txtqtv.setText(name);
         if (Integer.parseInt(lv) == 0) {
             btnQuanLy.setEnabled(false);
             btnThongKe.setEnabled(false);
@@ -56,14 +64,22 @@ public class frmMain extends javax.swing.JFrame {
         this.user = name;
         this.password = pass;
         this.lever = lv;
+        this.fullname = full;
+        tk.setUserName(name);
+        tk.setPassWord(pass);
+        tk.setFullName(full);
+        tk.setLv(Integer.parseInt(lv));
+        txtqtv.setText(tk.getFullName());
+
     }
+
     SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss_a");
-    
+
     public class Clock extends Thread {
-        
+
         public Clock() {
         }
-        
+
         @Override
         public void run() {
             while (true) {
@@ -284,7 +300,7 @@ public void thoat() {
             System.exit(0);
         }
     }
-    
+
     public void fill() {
         home = new JpHome();
         jPanel2.add(home);
@@ -296,7 +312,7 @@ public void thoat() {
     JpSetting Set;
     JpQuanLy ql;
     JpThongKe tke;
-    
+
     public void reloadPanel(int i) {
         jPanel2.removeAll();
         switch (i) {
@@ -361,7 +377,7 @@ public void thoat() {
     }
 
     private void btnDangXuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangXuatActionPerformed
-        int kq = JOptionPane.showConfirmDialog(null, "Đăng xuất tài khoản "+user+"?", "FBI Warning", JOptionPane.YES_NO_OPTION);
+        int kq = JOptionPane.showConfirmDialog(null, "Đăng xuất tài khoản " + fullname + "?", "FBI Warning", JOptionPane.YES_NO_OPTION);
         if (kq == 0) {
             this.setVisible(false);
             frmLogin login = new frmLogin();
@@ -408,16 +424,24 @@ public void thoat() {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmMain.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

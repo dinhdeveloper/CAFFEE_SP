@@ -4,7 +4,7 @@ ALTER PROC getTaiKhoan
 @PASS nchar(30)
 AS
 BEGIN
-	SELECT username, password FROM TAIKHOAN WHERE username = @USER AND password = @PASS
+	SELECT username, password, lv, fullname FROM TAIKHOAN WHERE username = @USER AND password = @PASS
 END
 GO
 
@@ -236,3 +236,5 @@ BEGIN
 SELECT MaBan FROM BAN
 END
 GO
+
+-- getAllBan

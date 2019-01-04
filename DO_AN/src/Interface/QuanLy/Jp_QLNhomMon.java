@@ -161,12 +161,36 @@ public class Jp_QLNhomMon extends javax.swing.JPanel {
 
         txtMaLoai.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         txtMaLoai.setToolTipText("Mã Loại");
+        txtMaLoai.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtMaLoaiFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaLoaiFocusLost(evt);
+            }
+        });
 
         txtTenLoai.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         txtTenLoai.setToolTipText("Tên Loại");
+        txtTenLoai.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTenLoaiFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTenLoaiFocusLost(evt);
+            }
+        });
 
         txtMauSac.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         txtMauSac.setToolTipText("Màu Sắc");
+        txtMauSac.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtMauSacFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMauSacFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -308,22 +332,25 @@ public class Jp_QLNhomMon extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void btnXoaLoaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaLoaiActionPerformed
-        if (txtTenLoai.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn loại muốn xóa");
-        } else {
-            try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
-                    PreparedStatement ps = conn.prepareCall("{call deleteNhomMon(?)}")) {
-                ps.setInt(1, Integer.parseInt(txtMaLoai.getText()));
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Xóa Loại Thành Công");
+        int kq = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa loại này không?", "Chú ý", JOptionPane.YES_NO_OPTION);
+        if (kq == 0) {
+            if (txtTenLoai.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn loại muốn xóa");
+            } else {
+                try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                        PreparedStatement ps = conn.prepareCall("{call deleteNhomMon(?)}")) {
+                    ps.setInt(1, Integer.parseInt(txtMaLoai.getText()));
+                    ps.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Xóa Loại Thành Công");
 
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
+            getData();
+            setTestfield();
         }
-        getData();
-        setTestfield();
     }//GEN-LAST:event_btnXoaLoaiActionPerformed
 
     private void txtTimLoaiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimLoaiKeyReleased
@@ -353,6 +380,51 @@ public class Jp_QLNhomMon extends javax.swing.JPanel {
         //[204,204,204]
         txtTimLoai.setForeground(new Color(204, 204, 204));
     }//GEN-LAST:event_txtTimLoaiFocusLost
+
+    private void txtMaLoaiFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaLoaiFocusGained
+        if (txtMaLoai.getText().equals("Mã Loại")) {
+            txtMaLoai.setText("");
+        }
+        txtMaLoai.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtMaLoaiFocusGained
+
+    private void txtMaLoaiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaLoaiFocusLost
+        if (txtMaLoai.getText().equals("")) {
+            txtMaLoai.setText("Mã Loại");
+        }
+        //[204,204,204]
+        txtMaLoai.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtMaLoaiFocusLost
+
+    private void txtTenLoaiFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTenLoaiFocusGained
+        if (txtTenLoai.getText().equals("Tên Loại")) {
+            txtTenLoai.setText("");
+        }
+        txtTenLoai.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtTenLoaiFocusGained
+
+    private void txtTenLoaiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTenLoaiFocusLost
+        if (txtTenLoai.getText().equals("")) {
+            txtTenLoai.setText("Tên Loại");
+        }
+        //[204,204,204]
+        txtTenLoai.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtTenLoaiFocusLost
+
+    private void txtMauSacFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMauSacFocusGained
+        if (txtMauSac.getText().equals("Màu Sắc")) {
+            txtMauSac.setText("");
+        }
+        txtMauSac.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtMauSacFocusGained
+
+    private void txtMauSacFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMauSacFocusLost
+        if (txtMauSac.getText().equals("")) {
+            txtMauSac.setText("Màu Sắc");
+        }
+        //[204,204,204]
+        txtMauSac.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtMauSacFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -8,6 +8,7 @@ package Interface.QuanLy;
 import Connect.ConnectSQL;
 import Dao.TaiKhoanDAO;
 import Dao.ThucDonDAO;
+import Interface.frmMain;
 import Models.TaiKhoan;
 import Models.ThucDon;
 import java.awt.Color;
@@ -30,9 +31,6 @@ import javax.swing.table.TableModel;
  */
 public class Jp_QLTaiKhoan extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Jp_QLTaiKhoan
-     */
     public Jp_QLTaiKhoan() {
         initComponents();
         txtID.setEnabled(false);
@@ -173,7 +171,6 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Interface/Images/logo.png"))); // NOI18N
 
         txtID.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtID.setText("ID");
         txtID.setToolTipText("ID");
         txtID.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -185,7 +182,6 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
         });
 
         txtUserName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtUserName.setText("USERNAME");
         txtUserName.setToolTipText("USERNAME");
         txtUserName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -202,7 +198,6 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
         });
 
         txtPassWord.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtPassWord.setText("PASSWORD");
         txtPassWord.setToolTipText("PASSWORD");
         txtPassWord.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -212,9 +207,13 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
                 txtPassWordFocusLost(evt);
             }
         });
+        txtPassWord.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPassWordActionPerformed(evt);
+            }
+        });
 
         txtLever.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtLever.setText("LEVER");
         txtLever.setToolTipText("LEVER");
         txtLever.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -224,9 +223,13 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
                 txtLeverFocusLost(evt);
             }
         });
+        txtLever.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtLeverActionPerformed(evt);
+            }
+        });
 
         txtFullName.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        txtFullName.setText("FULLNAME");
         txtFullName.setToolTipText("FULLNAME");
         txtFullName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -460,22 +463,25 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSuaTKActionPerformed
 
     private void btnXoaTKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaTKActionPerformed
-        if (txtUserName.getText().equals("")) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn người muốn xóa");
-        } else {
-            try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
-                    PreparedStatement ps = conn.prepareCall("{call deleteTaiKhoan(?)}")) {
-                ps.setInt(1, Integer.parseInt(txtID.getText()));
-                ps.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Xóa Tài Khoản Thành Công");
+        int kq = JOptionPane.showConfirmDialog(null, "Bạn muốn xóa tài khoản này không?", "Chú ý", JOptionPane.YES_NO_OPTION);
+        if (kq == 0) {
+            if (txtUserName.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn người muốn xóa");
+            } else {
+                try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                        PreparedStatement ps = conn.prepareCall("{call deleteTaiKhoan(?)}")) {
+                    ps.setInt(1, Integer.parseInt(txtID.getText()));
+                    ps.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Xóa Tài Khoản Thành Công");
 
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
-                        JOptionPane.ERROR_MESSAGE);
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
+            getData();
+            setTestfield();
         }
-        getData();
-        setTestfield();
     }//GEN-LAST:event_btnXoaTKActionPerformed
 
     private void txtTimTKKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimTKKeyReleased
@@ -507,6 +513,14 @@ public class Jp_QLTaiKhoan extends javax.swing.JPanel {
         //[204,204,204]
         txtTimTK.setForeground(new Color(204, 204, 204));
     }//GEN-LAST:event_txtTimTKFocusLost
+
+    private void txtPassWordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPassWordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPassWordActionPerformed
+
+    private void txtLeverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLeverActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtLeverActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

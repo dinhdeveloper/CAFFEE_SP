@@ -35,7 +35,7 @@ public class Jp_QLBan extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void getData() {
+    public void getDataBan() {
         DefaultTableModel model = new DefaultTableModel();
 
         model.addColumn("Mã Bàn");
@@ -169,10 +169,37 @@ public class Jp_QLBan extends javax.swing.JPanel {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Interface/Images/logo.png"))); // NOI18N
 
         txtMaBan.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtMaBan.setToolTipText("Mã Bàn");
+        txtMaBan.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtMaBanFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtMaBanFocusLost(evt);
+            }
+        });
 
         txtTenBan.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtTenBan.setToolTipText("Tên Bàn");
+        txtTenBan.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTenBanFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTenBanFocusLost(evt);
+            }
+        });
 
         txtTrangThai.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtTrangThai.setToolTipText("Trạng Thái");
+        txtTrangThai.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtTrangThaiFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTrangThaiFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -247,7 +274,7 @@ public class Jp_QLBan extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTimBanActionPerformed
 
     private void jTable1AncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_jTable1AncestorAdded
-        getData();
+        getDataBan();
     }//GEN-LAST:event_jTable1AncestorAdded
 
     private void btnThemBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemBanActionPerformed
@@ -265,7 +292,7 @@ public class Jp_QLBan extends javax.swing.JPanel {
                 ex.printStackTrace();
             }
         }
-        getData();
+        getDataBan();
         setTestfield();
     }//GEN-LAST:event_btnThemBanActionPerformed
 
@@ -284,13 +311,15 @@ public class Jp_QLBan extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "ERROR",
                         JOptionPane.ERROR_MESSAGE);
             }
-            getData();
+            getDataBan();
             setTestfield();
         }
     }//GEN-LAST:event_btnSuaBanActionPerformed
 
     private void btnXoaBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaBanActionPerformed
-        if (txtTenBan.getText().equals("")) {
+       int kq = JOptionPane.showConfirmDialog( null,"Bạn muốn xóa bàn này không?", "Chú ý",JOptionPane.YES_NO_OPTION);
+       if(kq ==0){
+           if (txtTenBan.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn muốn xóa");
         } else {
             try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
@@ -304,8 +333,9 @@ public class Jp_QLBan extends javax.swing.JPanel {
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-        getData();
+        getDataBan();
         setTestfield();
+       }
     }//GEN-LAST:event_btnXoaBanActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
@@ -349,6 +379,51 @@ public class Jp_QLBan extends javax.swing.JPanel {
         sorter.setSortKeys(null);
         jTable1.setRowSorter((RowSorter<? extends TableModel>) sorter);
     }//GEN-LAST:event_txtTimBanKeyReleased
+
+    private void txtMaBanFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaBanFocusGained
+        if (txtMaBan.getText().equals("Mã Bàn")) {
+            txtMaBan.setText("");
+        }
+        txtMaBan.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtMaBanFocusGained
+
+    private void txtMaBanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtMaBanFocusLost
+        if (txtMaBan.getText().equals("")) {
+            txtMaBan.setText("Mã Bàn");
+        }
+        //[204,204,204]
+        txtMaBan.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtMaBanFocusLost
+
+    private void txtTenBanFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTenBanFocusGained
+        if (txtTenBan.getText().equals("Tên Bàn")) {
+            txtTenBan.setText("");
+        }
+        txtTenBan.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtTenBanFocusGained
+
+    private void txtTenBanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTenBanFocusLost
+        if (txtTenBan.getText().equals("")) {
+            txtTenBan.setText("Tên Bàn");
+        }
+        //[204,204,204]
+        txtTenBan.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtTenBanFocusLost
+
+    private void txtTrangThaiFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrangThaiFocusGained
+        if (txtTrangThai.getText().equals("Trạng Thái")) {
+            txtTrangThai.setText("");
+        }
+        txtTrangThai.setForeground(Color.BLACK);
+    }//GEN-LAST:event_txtTrangThaiFocusGained
+
+    private void txtTrangThaiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrangThaiFocusLost
+        if (txtTrangThai.getText().equals("")) {
+            txtTrangThai.setText("Trạng Thái");
+        }
+        //[204,204,204]
+        txtTrangThai.setForeground(new Color(204, 204, 204));
+    }//GEN-LAST:event_txtTrangThaiFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

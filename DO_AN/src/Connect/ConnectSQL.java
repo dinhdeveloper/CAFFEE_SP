@@ -91,7 +91,24 @@ public class ConnectSQL {
         }
         return td;
     }
-
+// frmMain
+    public void frmMen(String name, String pass, int lv, String full){
+        TaiKhoan tk = null;
+        try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
+                PreparedStatement ps = conn.prepareCall("{call getTK}")) {
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                name = tk.getUserName();
+                pass = tk.getPassWord();
+                lv = tk.getLv();
+                full = tk.getFullName();
+                tk = new TaiKhoan(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getString(5));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
     public int UpdateTK(TaiKhoan b) {
         int update = 0;
         String sql = "UPDATE TAIKHOAN SET username = '" + b.getUserName() + "', password = '" + b.getPassWord() + "', lv = '" + b.getLv() + "' WHERE id = '" + b.getId() + "'";
@@ -139,6 +156,7 @@ public class ConnectSQL {
         } else {
             try (Connection conn = DriverManager.getConnection(ConnectSQL.ConnectSQL());
                     PreparedStatement ps = conn.prepareCall("{call getMaBan(?)}")) {
+                
                 ResultSet rs = ps.executeQuery();
                 arrBan = new ArrayList<Ban>();
                 while (rs.next()) {
